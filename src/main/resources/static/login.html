@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        fetch("/user/login", {
+            method: "GET",
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            if (result.status == 500) return;
+            if (result.code == 400) return;
+            document.querySelector("#user").innerHTML = result.name;
+            document.querySelector(".unauthenticated").style.display = 'none';
+            document.querySelector(".authenticated").style.display = '';
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+        const logout = () => {
+            fetch("/logout", {
+                method: "POST",
+            })
+            .then((response) => response.json())
+            .then((result) => {
+                if (result.status == 500) return;
+                document.querySelector("#user").innerHTML = '';
+                document.querySelector(".unauthenticated").style.display = '';
+                document.querySelector(".authenticated").style.display = 'none';
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container unauthenticated">
+        With Google: <a href="/oauth2/authorization/google">click here</a>
+    </div>
+    <div class="container authenticated" style="display:none">
+        Logged in as: <span id="user"></span>
+        <div>
+            <button onClick="logout()" class="btn btn-primary">Logout</button>
+        </div>
+    </div>
+</body>
+</html>

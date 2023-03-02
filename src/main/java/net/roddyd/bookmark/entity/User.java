@@ -2,7 +2,9 @@ package net.roddyd.bookmark.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -15,10 +17,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @Column(nullable = false)
     private String nickname;
-    private String googleToken;
-    private String naverToken;
     @OneToMany
     private Set<Bookmark> bookmarks;
+    @UpdateTimestamp
+    private LocalDateTime lastLogin;
 }
